@@ -74,6 +74,8 @@ with open('input.txt', 'r') as file:
         else:
             expanded_disk_map.extend([-1]*disk_map[i])
 
-compacted_disk_map = compact_disk_map(expanded_disk_map)
+print(expanded_disk_map[:100])
 
-print(calc_checksum(compacted_disk_map))
+# compacted_disk_map = compact_disk_map(expanded_disk_map)
+
+# print(calc_checksum(compacted_disk_map))
