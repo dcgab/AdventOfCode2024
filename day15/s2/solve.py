@@ -118,6 +118,7 @@ class BoxComponent(WareHouseObjectComponent):
         elif isinstance(current_dest_obj, Obstacle) or isinstance(other_dest_obj, Obstacle):
             return False
         else:
+            # One of objects is a box
             current_can_move = True
             other_can_move = True
             if isinstance(current_dest_obj, BoxComponent):
@@ -192,7 +193,6 @@ class BoxComponent(WareHouseObjectComponent):
             else:
                 current_can_move = True
                 other_can_move = True
-                moved_box = False
                 if isinstance(current_dest_obj, BoxComponent):
                     current_can_move = current_dest_obj.can_move_vertical(direction)
                 if isinstance(other_dest_obj, BoxComponent):
@@ -201,8 +201,13 @@ class BoxComponent(WareHouseObjectComponent):
                 
                     
                 if current_can_move and other_can_move:
-                    if isinstance(current_dest_obj, BoxComponent) and isinstance(current_dest_obj, BoxComponent):
-                        current_dest_obj.move(direction)
+                    
+                    if isinstance(current_dest_obj, BoxComponent) and isinstance(other_dest_obj, BoxComponent):
+                        if current_dest_obj.parent == other_dest_obj.parent:
+                            current_dest_obj.move(direction)
+                        else:
+                            current_dest_obj.move(direction)
+                            other_dest_obj.move(direction)
                     else:
                         if isinstance(current_dest_obj, BoxComponent):
                             current_dest_obj.move(direction)
@@ -329,7 +334,7 @@ class Warehouse:
         for x in range(self.map_cols):
             for y in range(self.map_rows):
                 obj = self.get_object(x, y)
-                if isinstance(obj, Box):
+                if isinstance(obj, BoxComponent) and obj.component_part == ComponentPart.LEFT:
                     sum += x + y * 100
         return sum
     
@@ -344,13 +349,12 @@ class Warehouse:
 warehouse = Warehouse('input.txt')
 print(warehouse)
 
-print(f'move: {warehouse.directions[warehouse.direction_index]}')
 while warehouse.update():
-    print(warehouse)
-    print(f'move: {warehouse.directions[warehouse.direction_index]}')
-# print(warehouse)
+    pass
+    # print(f'move: {warehouse.directions[warehouse.direction_index]}')
+print(warehouse)
 
 # print(warehouse.calc_solution())
 
 
-# print(warehouse)
+print(warehouse.calc_solution())
